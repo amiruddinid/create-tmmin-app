@@ -1,0 +1,33 @@
+#!/bin/bash
+SOURCE_DIR=src/components/ui
+files=( "${SOURCE_DIR}"/*.tsx )
+
+echo "${files[@]}"
+
+# Loop through the array and run npm script for each file
+for file in "${files[@]}"; do
+    file_directory="${file%/*}"
+    # Removes the path, leaving only the filename
+    filename_without_path="${file##*/}"
+    # Remove the extension from the filename
+    filename_without_extension="${filename_without_path%.*}"
+
+    Check if the item is a directory
+    if [ -d "$filename_without_extension" ]; then
+        echo "Skipping directory: $filename_without_extension"
+        continue  # Skip this iteration if it's a directory
+    fi
+
+    # Run the npm script with the file without its extension
+    echo "Running npm script for file: $filename_without_extension"
+    npm run generate -- component-cli "$filename_without_extension" "components" "ui"
+
+    mv -f "${file}" "${file_directory}/${filename_without_extension}/${filename_without_path}"
+
+    # Check if npm script ran successfully
+    if [ $? -eq 0 ]; then
+        echo "Successfully generated component for $filename_without_extension"c
+    else
+        echo "Failed to generate component for $filename_without_extension"
+    fi
+done

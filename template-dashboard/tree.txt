@@ -1,0 +1,32 @@
+├── project-name
+│   ├── .storybook  - Storybook config and stories folder
+│   ├── __mocks__ - Mocks folder for testing
+│   ├── e2e - End-to-end tests folder / ui testing using playwright
+│   ├── generators - Generators folder for creating new components or other utilities
+│   ├── public - Public folder for static assets
+│   ├── src - Source folder for the project
+│   │   ├── app - App folder for the main app
+│   │   │   ├── routes - Routes folder for the app
+│   │   │   │   ├── app - App routes
+│   │   │   │   └── auth - Auth routes
+│   │   ├── assets - Assets folder for images, fonts, etc.
+│   │   ├── components - Shared Components folder for reusable components
+│   │   │   ├── errors - Error components
+│   │   │   ├── layouts - Layout components
+│   │   │   ├── seo - SEO components
+│   │   │   ├── ui - UI components
+│   │   │   │   ├── button - Button components
+│   │   │   │   └── table - Table components
+│   │   ├── config - Config folder for environment variables
+│   │   ├── features - Feature folders for different features, features cant share components, hooks, etc
+│   │   │   ├── auth - Auth feature folder
+│   │   │   │   ├── components - Auth feature components
+│   │   │   ├── comments - Comments feature folder
+│   │   │   │   ├── api - Comments feature API folder
+│   │   │   │   └── components - Comments feature components
+│   │   ├── hooks - Shared Hooks folder for custom hooks
+│   │   ├── lib - Shared Lib folder for library config
+│   │   ├── testing - Testing folder for testing utilities
+│   │   │   ├── mocks - Mocks folder for testing
+│   │   ├── types - Shared Types folder for custom types
+│   │   └── utils - Shared Utils folder for custom utils

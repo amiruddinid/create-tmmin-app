@@ -1,0 +1,26 @@
+image: node:latest
+
+stages:
+  - build
+  - release
+
+variables:
+  PACKAGE_NAME: "create-tmmin-app"
+  PACKAGE_VERSION: "0.0.1.rc1"
+
+build:
+  stage: build
+  script:
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+
+release:
+  stage: release
+  script:
+    - npm pack
+  artifacts:
+    paths:
+      - ${PACKAGE_NAME}-${PACKAGE_VERSION}.tgz

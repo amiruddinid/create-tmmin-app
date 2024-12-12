@@ -1,6 +1,6 @@
 import { ContentLayout } from '@/components/layouts';
 import { UpdateProfile } from '@/features/users/components/update-profile';
-import { useUser } from '@/lib/auth';
+import { useUser } from '@/stores/auth/hooks';
 
 type EntryProps = {
   label: string;
@@ -16,8 +16,8 @@ const Entry = ({ label, value }: EntryProps) => (
 );
 
 export const ProfileRoute = () => {
-  const user = useUser();
-
+  const [user] = useUser();
+  console.log(user);
   if (!user.data) return null;
 
   return (

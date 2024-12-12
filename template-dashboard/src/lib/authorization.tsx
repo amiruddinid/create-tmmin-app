@@ -1,8 +1,7 @@
 import * as React from 'react';
 
+import { useUser } from '@/stores/auth/hooks';
 import { Comment, User } from '@/types/api';
-
-import { useUser } from './auth';
 
 export enum ROLES {
   ADMIN = 'ADMIN',
@@ -26,7 +25,7 @@ export const POLICIES = {
 };
 
 export const useAuthorization = () => {
-  const user = useUser();
+  const [user] = useUser();
 
   if (!user.data) {
     throw Error('User does not exist!');

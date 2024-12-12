@@ -1,8 +1,12 @@
+import { Store } from '@reduxjs/toolkit';
 import Axios, { InternalAxiosRequestConfig } from 'axios';
+// import { useNotifications } from '@/components/ui/notifications';
+import { nanoid } from 'nanoid';
 
-import { useNotifications } from '@/components/ui/notifications';
 import { env } from '@/config/env';
 import { paths } from '@/config/paths';
+
+import { log } from './utils';
 
 function authRequestInterceptor(config: InternalAxiosRequestConfig) {
   if (config.headers) {
@@ -17,26 +21,32 @@ export const api = Axios.create({
   baseURL: env.API_URL,
 });
 
-api.interceptors.request.use(authRequestInterceptor);
-api.interceptors.response.use(
-  (response) => {
-    return response.data;
-  },
-  (error) => {
-    const message = error.response?.data?.message || error.message;
-    useNotifications.getState().addNotification({
-      type: 'error',
-      title: 'Error',
-      message,
-    });
-
-    if (error.response?.status === 401) {
-      const searchParams = new URLSearchParams();
-      const redirectTo =
-        searchParams.get('redirectTo') || window.location.pathname;
-      window.location.href = paths.auth.login.getHref(redirectTo);
-    }
-
-    return Promise.reject(error);
-  },
-);
+export const setupAxiosInterceptors = (store: Store) => {
+  api.interceptors.request.use(authRequestInterceptor);
+  api.interceptors.response.use(
+    (response) => {
+      console.log('response', response);
+      return response.data;
+    },
+    (error) => {
+      const dispatch = store.dispatch;
+      const message = error.response?.data?.message || error.message;
+      dispatch({
+        type: 'appAlert/setAppAlert',
+        payload: {
+          id: nanoid(),
+          title: message,
+          type: 'error',
+        },
+      });
+      if (error.response?.status === 401) {
+        const searchParams = new URLSearchParams();
+        const redirectTo =
+          searchParams.get('redirectTo') || window.location.pathname;
+        window.location.href = paths.auth.login.getHref(redirectTo);
+      }
+      log('error', error);
+      return Promise.reject(error);
+    },
+  );
+};

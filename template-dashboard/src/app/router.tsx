@@ -1,4 +1,3 @@
-import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
@@ -7,7 +6,7 @@ import { ProtectedRoute } from '@/lib/auth';
 
 import { AppRoot, AppRootErrorBoundary } from './routes/app/root';
 
-export const createAppRouter = (queryClient: QueryClient) =>
+export const createAppRouter = () =>
   createBrowserRouter([
     {
       path: paths.home.path,
@@ -39,45 +38,6 @@ export const createAppRouter = (queryClient: QueryClient) =>
       ),
       ErrorBoundary: AppRootErrorBoundary,
       children: [
-        {
-          path: paths.app.discussions.path,
-          lazy: async () => {
-            const { DiscussionsRoute, discussionsLoader } = await import(
-              './routes/app/discussions/discussions'
-            );
-            return {
-              Component: DiscussionsRoute,
-              loader: discussionsLoader(queryClient),
-            };
-          },
-          ErrorBoundary: AppRootErrorBoundary,
-        },
-        {
-          path: paths.app.discussion.path,
-          lazy: async () => {
-            const { DiscussionRoute, discussionLoader } = await import(
-              './routes/app/discussions/discussion'
-            );
-            return {
-              Component: DiscussionRoute,
-              loader: discussionLoader(queryClient),
-            };
-          },
-          ErrorBoundary: AppRootErrorBoundary,
-        },
-        {
-          path: paths.app.users.path,
-          lazy: async () => {
-            const { UsersRoute, usersLoader } = await import(
-              './routes/app/users'
-            );
-            return {
-              Component: UsersRoute,
-              loader: usersLoader(queryClient),
-            };
-          },
-          ErrorBoundary: AppRootErrorBoundary,
-        },
         {
           path: paths.app.profile.path,
           lazy: async () => {
@@ -113,9 +73,7 @@ export const createAppRouter = (queryClient: QueryClient) =>
   ]);
 
 export const AppRouter = () => {
-  const queryClient = useQueryClient();
-
-  const router = useMemo(() => createAppRouter(queryClient), [queryClient]);
+  const router = useMemo(() => createAppRouter(), []);
 
   return <RouterProvider router={router} />;
 };

@@ -64,7 +64,7 @@ export function authenticate({
       },
     },
   });
-
+  console.log(user, password);
   if (user?.password === hash(password)) {
     const sanitizedUser = sanitizeUser(user);
     const encodedToken = encode(sanitizedUser);

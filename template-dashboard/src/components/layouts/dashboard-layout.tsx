@@ -1,4 +1,4 @@
-import { Home, PanelLeft, Folder, Users, User2 } from 'lucide-react';
+import { Home, PanelLeft, User2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { NavLink, useNavigate, useNavigation } from 'react-router-dom';
 
@@ -6,8 +6,8 @@ import logo from '@/assets/logo.svg';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 import { paths } from '@/config/paths';
-import { useLogout } from '@/lib/auth';
-import { ROLES, useAuthorization } from '@/lib/authorization';
+import { useAuthorization } from '@/lib/authorization';
+import { useLogout } from '@/stores/auth/hooks';
 import { cn } from '@/utils/cn';
 
 import {
@@ -82,12 +82,6 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   const navigation = [
     { name: 'Dashboard', to: paths.app.dashboard.getHref(), icon: Home },
-    { name: 'Discussions', to: paths.app.discussions.getHref(), icon: Folder },
-    checkAccess({ allowedRoles: [ROLES.ADMIN] }) && {
-      name: 'Users',
-      to: paths.app.users.getHref(),
-      icon: Users,
-    },
   ].filter(Boolean) as SideNavigationItem[];
 
   return (
@@ -187,7 +181,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className={cn('block px-4 py-2 text-sm text-gray-700 w-full')}
-                onClick={() => logout.mutate({})}
+                onClick={() => logout()}
               >
                 Sign Out
               </DropdownMenuItem>

@@ -5,21 +5,22 @@ import { Button } from '@/components/ui/button';
 
 import {
   DropdownMenu,
-  DropdownMenuTrigger,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuCheckboxItem,
-  DropdownMenuRadioItem,
   DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuSub,
-  DropdownMenuSubTrigger,
   DropdownMenuSubContent,
-  DropdownMenuRadioGroup,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
 } from './dropdown';
 
 const meta: Meta = {
   component: DropdownMenu,
+  tags: ['autodocs'],
 };
 
 export default meta;

@@ -3,24 +3,24 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Form, Input } from '@/components/ui/form';
 import { paths } from '@/config/paths';
-import { useLogin, loginInputSchema } from '@/lib/auth';
+import { useLogin, useUser } from '@/stores/auth';
+import { loginInputSchema } from '@/stores/auth/api';
 
 type LoginFormProps = {
   onSuccess: () => void;
 };
 
 export const LoginForm = ({ onSuccess }: LoginFormProps) => {
-  const login = useLogin({
-    onSuccess,
-  });
   const [searchParams] = useSearchParams();
+  const login = useLogin(onSuccess);
+  const [user] = useUser();
   const redirectTo = searchParams.get('redirectTo');
 
   return (
     <div>
       <Form
         onSubmit={(values) => {
-          login.mutate(values);
+          login(values);
         }}
         schema={loginInputSchema}
       >
@@ -40,7 +40,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
             />
             <div>
               <Button
-                isLoading={login.isPending}
+                isLoading={user.status === 'loading'}
                 type="submit"
                 className="w-full"
               >

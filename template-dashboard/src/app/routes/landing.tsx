@@ -4,11 +4,11 @@ import logo from '@/assets/logo.svg';
 import { Head } from '@/components/seo';
 import { Button } from '@/components/ui/button';
 import { paths } from '@/config/paths';
-import { useUser } from '@/lib/auth';
+import { useUser } from '@/stores/auth/hooks';
 
 export const LandingRoute = () => {
   const navigate = useNavigate();
-  const user = useUser();
+  const [user] = useUser();
 
   const handleStart = () => {
     if (user.data) {

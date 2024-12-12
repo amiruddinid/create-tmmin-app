@@ -1,9 +1,9 @@
 import { ContentLayout } from '@/components/layouts';
-import { useUser } from '@/lib/auth';
 import { ROLES } from '@/lib/authorization';
+import { useUser } from '@/stores/auth/hooks';
 
 export const DashboardRoute = () => {
-  const user = useUser();
+  const [user] = useUser();
   return (
     <ContentLayout title="Dashboard">
       <h1 className="text-xl">

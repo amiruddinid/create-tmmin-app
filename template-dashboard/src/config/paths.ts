@@ -17,29 +17,18 @@ export const paths = {
     },
   },
 
+  // can be replaced with backend data
   app: {
     root: {
-      path: '/app',
+      path: '/',
       getHref: () => '/app',
     },
     dashboard: {
-      path: '',
+      path: 'app',
       getHref: () => '/app',
     },
-    discussions: {
-      path: 'discussions',
-      getHref: () => '/app/discussions',
-    },
-    discussion: {
-      path: 'discussions/:discussionId',
-      getHref: (id: string) => `/app/discussions/${id}`,
-    },
-    users: {
-      path: 'users',
-      getHref: () => '/app/users',
-    },
     profile: {
-      path: 'profile',
+      path: 'app/profile',
       getHref: () => '/app/profile',
     },
   },

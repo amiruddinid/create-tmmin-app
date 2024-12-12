@@ -205,13 +205,13 @@ const Form = <
 };
 
 export {
-  useFormField,
   Form,
-  FormProvider,
-  FormItem,
-  FormLabel,
   FormControl,
   FormDescription,
-  FormMessage,
   FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  FormProvider,
+  useFormField,
 };

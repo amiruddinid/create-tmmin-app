@@ -1,9 +1,9 @@
+import minimist from "minimist";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import minimist from "minimist";
-import prompts from "prompts";
 import colors from "picocolors";
+import prompts from "prompts";
 
 const { blue, cyanBright, red, redBright, white, reset } = colors;
 
@@ -241,8 +241,8 @@ async function init() {
       console.log("  yarn dev");
       break;
     default:
-      console.log(`  ${pkgManager} install`);
-      console.log(`  ${pkgManager} run dev`);
+      console.log(`  yarn`);
+      console.log(`  yarn dev`);
       break;
   }
   console.log();

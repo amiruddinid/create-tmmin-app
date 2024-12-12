@@ -1,27 +1,13 @@
 import { Button } from '@/components/ui/button';
 import { ConfirmationDialog } from '@/components/ui/dialog';
-import { useNotifications } from '@/components/ui/notifications';
-import { useUser } from '@/lib/auth';
-
-import { useDeleteUser } from '../api/delete-user';
+import { useUser } from '@/stores/auth/hooks';
 
 type DeleteUserProps = {
   id: string;
 };
 
 export const DeleteUser = ({ id }: DeleteUserProps) => {
-  const user = useUser();
-  const { addNotification } = useNotifications();
-  const deleteUserMutation = useDeleteUser({
-    mutationConfig: {
-      onSuccess: () => {
-        addNotification({
-          type: 'success',
-          title: 'User Deleted',
-        });
-      },
-    },
-  });
+  const [user] = useUser();
 
   if (user.data?.id === id) return null;
 
@@ -33,10 +19,10 @@ export const DeleteUser = ({ id }: DeleteUserProps) => {
       triggerButton={<Button variant="destructive">Delete</Button>}
       confirmButton={
         <Button
-          isLoading={deleteUserMutation.isPending}
+          isLoading={false}
           type="button"
           variant="destructive"
-          onClick={() => deleteUserMutation.mutate({ userId: id })}
+          onClick={() => console.log({ userId: id })}
         >
           Delete User
         </Button>

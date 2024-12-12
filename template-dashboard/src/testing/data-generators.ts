@@ -1,11 +1,11 @@
 import {
+  randCatchPhrase,
   randCompanyName,
-  randUserName,
   randEmail,
   randParagraph,
-  randUuid,
   randPassword,
-  randCatchPhrase,
+  randUserName,
+  randUuid,
 } from '@ngneat/falso';
 
 const generateUser = () => ({
@@ -14,10 +14,6 @@ const generateUser = () => ({
   lastName: randUserName({ withAccents: false }),
   email: randEmail(),
   password: randPassword(),
-  teamId: randUuid(),
-  teamName: randCompanyName(),
-  role: 'ADMIN',
-  bio: randParagraph(),
   createdAt: Date.now(),
 });
 

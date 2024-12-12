@@ -16,6 +16,7 @@ import {
 
 const meta: Meta<typeof Drawer> = {
   component: Drawer,
+  tags: ['autodocs'],
 };
 
 export default meta;

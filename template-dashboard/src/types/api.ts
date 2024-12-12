@@ -5,6 +5,9 @@
 export type BaseEntity = {
   id: string;
   createdAt: number;
+  updatedAt: number;
+  createdBy: string;
+  updatedBy: string;
 };
 
 export type Entity<T> = {

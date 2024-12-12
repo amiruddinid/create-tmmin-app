@@ -5,11 +5,11 @@ import { env } from '@/config/env';
 
 import { db, persistDb } from '../db';
 import {
+  AUTH_COOKIE,
   authenticate,
   hash,
-  requireAuth,
-  AUTH_COOKIE,
   networkDelay,
+  requireAuth,
 } from '../utils';
 
 type RegisterBody = {
@@ -17,8 +17,10 @@ type RegisterBody = {
   lastName: string;
   email: string;
   password: string;
-  teamId?: string;
-  teamName?: string;
+};
+
+type RequestBody<T> = {
+  body: T;
 };
 
 type LoginBody = {
@@ -30,8 +32,13 @@ export const authHandlers = [
   http.post(`${env.API_URL}/auth/register`, async ({ request }) => {
     await networkDelay();
     try {
-      const userObject = (await request.json()) as RegisterBody;
+      let userObject = (await request.json()) as
+        | RequestBody<RegisterBody>
+        | RegisterBody;
 
+      if ('body' in userObject) {
+        userObject = userObject.body;
+      }
       const existingUser = db.user.findFirst({
         where: {
           email: {
@@ -46,43 +53,10 @@ export const authHandlers = [
           { status: 400 },
         );
       }
-
-      let teamId;
-      let role;
-
-      if (!userObject.teamId) {
-        const team = db.team.create({
-          name: userObject.teamName ?? `${userObject.firstName} Team`,
-        });
-        await persistDb('team');
-        teamId = team.id;
-        role = 'ADMIN';
-      } else {
-        const existingTeam = db.team.findFirst({
-          where: {
-            id: {
-              equals: userObject.teamId,
-            },
-          },
-        });
-
-        if (!existingTeam) {
-          return HttpResponse.json(
-            {
-              message: 'The team you are trying to join does not exist!',
-            },
-            { status: 400 },
-          );
-        }
-        teamId = userObject.teamId;
-        role = 'USER';
-      }
-
+      console.log(userObject);
       db.user.create({
         ...userObject,
-        role,
         password: hash(userObject.password),
-        teamId,
       });
 
       await persistDb('user');
@@ -102,6 +76,7 @@ export const authHandlers = [
         },
       });
     } catch (error: any) {
+      console.log(error);
       return HttpResponse.json(
         { message: error?.message || 'Server Error' },
         { status: 500 },
@@ -113,7 +88,14 @@ export const authHandlers = [
     await networkDelay();
 
     try {
-      const credentials = (await request.json()) as LoginBody;
+      let credentials = (await request.json()) as
+        | RequestBody<LoginBody>
+        | LoginBody;
+
+      if ('body' in credentials) {
+        credentials = credentials.body;
+      }
+      console.log(credentials);
       const result = authenticate(credentials);
 
       // todo: remove once tests in Github Actions are fixed
@@ -126,6 +108,7 @@ export const authHandlers = [
         },
       });
     } catch (error: any) {
+      console.log(error);
       return HttpResponse.json(
         { message: error?.message || 'Server Error' },
         { status: 500 },

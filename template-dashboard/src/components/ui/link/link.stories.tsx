@@ -4,6 +4,7 @@ import { Link } from './link';
 
 const meta: Meta<typeof Link> = {
   component: Link,
+  tags: ['autodocs'],
 };
 
 export default meta;

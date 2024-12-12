@@ -1,4 +1,7 @@
-image: node:latest
+image: node:lat
+
+cache:
+ n
 
 stages:
   - build

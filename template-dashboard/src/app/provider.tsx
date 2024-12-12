@@ -1,52 +1,42 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { ThemeProvider } from 'next-themes';
 import * as React from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { HelmetProvider } from 'react-helmet-async';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 
 import { MainErrorFallback } from '@/components/errors/main';
-import { Notifications } from '@/components/ui/notifications';
+import { AppAlert } from '@/components/ui/notifications/AppAlert';
 import { Spinner } from '@/components/ui/spinner';
-import { AuthLoader } from '@/lib/auth';
-import { queryConfig } from '@/lib/react-query';
-
+import { setupAxiosInterceptors } from '@/lib/api-client';
+import { persistor, store } from '@/stores';
 type AppProviderProps = {
   children: React.ReactNode;
 };
 
-export const AppProvider = ({ children }: AppProviderProps) => {
-  const [queryClient] = React.useState(
-    () =>
-      new QueryClient({
-        defaultOptions: queryConfig,
-      }),
-  );
+const Loading = () => (
+  <div className="flex h-screen w-screen items-center justify-center">
+    <Spinner size="xl" />
+  </div>
+);
 
+export const AppProvider = ({ children }: AppProviderProps) => {
   return (
-    <React.Suspense
-      fallback={
-        <div className="flex h-screen w-screen items-center justify-center">
-          <Spinner size="xl" />
-        </div>
-      }
-    >
+    <React.Suspense fallback={<Loading />}>
       <ErrorBoundary FallbackComponent={MainErrorFallback}>
         <HelmetProvider>
-          <QueryClientProvider client={queryClient}>
-            {import.meta.env.DEV && <ReactQueryDevtools />}
-            <Notifications />
-            <AuthLoader
-              renderLoading={() => (
-                <div className="flex h-screen w-screen items-center justify-center">
-                  <Spinner size="xl" />
-                </div>
-              )}
-            >
-              {children}
-            </AuthLoader>
-          </QueryClientProvider>
+          <ThemeProvider>
+            <Provider store={store}>
+              <PersistGate loading={<Loading />} persistor={persistor}>
+                <AppAlert />
+                {children}
+              </PersistGate>
+            </Provider>
+          </ThemeProvider>
         </HelmetProvider>
       </ErrorBoundary>
     </React.Suspense>
   );
 };
+
+setupAxiosInterceptors(store);

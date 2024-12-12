@@ -1,34 +1,26 @@
-import * as React from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
-import { Form, Input, Select, Label, Switch } from '@/components/ui/form';
+import { Form, Input } from '@/components/ui/form';
 import { paths } from '@/config/paths';
-import { useRegister, registerInputSchema } from '@/lib/auth';
-import { Team } from '@/types/api';
+import { useRegister, useUser } from '@/stores/auth';
+import { registerInputSchema } from '@/stores/auth/api';
+import { AuthResponse } from '@/types/api';
 
-type RegisterFormProps = {
-  onSuccess: () => void;
-  chooseTeam: boolean;
-  setChooseTeam: () => void;
-  teams?: Team[];
+export type RegisterFormProps = {
+  onSuccess: (response: AuthResponse) => void;
 };
 
-export const RegisterForm = ({
-  onSuccess,
-  chooseTeam,
-  setChooseTeam,
-  teams,
-}: RegisterFormProps) => {
-  const registering = useRegister({ onSuccess });
+export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
   const [searchParams] = useSearchParams();
+  const register = useRegister(onSuccess);
+  const [user] = useUser();
   const redirectTo = searchParams.get('redirectTo');
-
   return (
     <div>
       <Form
         onSubmit={(values) => {
-          registering.mutate(values);
+          register(values);
         }}
         schema={registerInputSchema}
         options={{
@@ -61,40 +53,9 @@ export const RegisterForm = ({
               error={formState.errors['password']}
               registration={register('password')}
             />
-
-            <div className="flex items-center space-x-2">
-              <Switch
-                checked={chooseTeam}
-                onCheckedChange={setChooseTeam}
-                className={`${
-                  chooseTeam ? 'bg-blue-600' : 'bg-gray-200'
-                } relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2`}
-                id="choose-team"
-              />
-              <Label htmlFor="airplane-mode">Join Existing Team</Label>
-            </div>
-
-            {chooseTeam && teams ? (
-              <Select
-                label="Team"
-                error={formState.errors['teamId']}
-                registration={register('teamId')}
-                options={teams?.map((team) => ({
-                  label: team.name,
-                  value: team.id,
-                }))}
-              />
-            ) : (
-              <Input
-                type="text"
-                label="Team Name"
-                error={formState.errors['teamName']}
-                registration={register('teamName')}
-              />
-            )}
             <div>
               <Button
-                isLoading={registering.isPending}
+                isLoading={user.status === 'loading'}
                 type="submit"
                 className="w-full"
               >

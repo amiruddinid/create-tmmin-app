@@ -1,5 +1,5 @@
 {
-  "name": "create-tmmin-app",
+  "name": "@tmmin/create-tmmin-app",
   "version": "0.0.1",
   "type": "module",
   "license": "MIT",
@@ -39,5 +39,8 @@
     "picocolors": "^1.1.1",
     "prompts": "^2.4.2",
     "unbuild": "^3.0.0-rc.11"
+  },
+  "publishConfig": {
+    "@tmmin:registry": "https://gitlab.com/api/v4/projects/65291248/packages/npm/"
   }
 }

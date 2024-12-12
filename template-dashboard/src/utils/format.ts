@@ -1,4 +1,4 @@
-import { default as dayjs } from 'dayjs';
+import { format } from 'date-fns';
 
-export const formatDate = (date: number) =>
-  dayjs(date).format('MMMM D, YYYY h:mm A');
+export const formatDate = (date: number | Date | string) =>
+  format(date, 'MMMM D, YYYY h:mm A');

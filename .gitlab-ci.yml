@@ -7,7 +7,7 @@ stages:
 
 variables:
   PACKAGE_NAME: "create-tmmin-app"
-  PACKAGE_VERSION: "0.0.1.rc1"
+  PACKAGE_VERSION: "0.0.1"
 
 build:
   stage: build

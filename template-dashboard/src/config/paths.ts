@@ -31,5 +31,21 @@ export const paths = {
       path: 'app/profile',
       getHref: () => '/app/profile',
     },
+    master: {
+      path: 'app/master',
+      getHref: () => '/app/master',
+      access: {
+        path: 'app/master/access',
+        getHref: () => '/app/master/access',
+        menu: {
+          path: 'app/master/access/menu',
+          getHref: () => '/app/master/access/menu',
+        },
+        role: {
+          path: 'app/master/access/roles',
+          getHref: () => '/app/master/access/roles',
+        },
+      },
+    },
   },
 } as const;

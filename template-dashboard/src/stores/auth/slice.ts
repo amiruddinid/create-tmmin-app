@@ -15,7 +15,6 @@ type AuthStateType = StateEntity<{
   token: string | null;
   message: string | null;
   isLogin: boolean;
-  status: 'idle' | 'loading' | 'success' | 'error';
 }>;
 
 const initialState: AuthStateType = {

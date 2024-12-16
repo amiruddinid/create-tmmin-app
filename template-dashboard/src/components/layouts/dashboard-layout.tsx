@@ -1,12 +1,10 @@
-import { Home, PanelLeft, User2 } from 'lucide-react';
+import { User2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { NavLink, useNavigate, useNavigation } from 'react-router-dom';
+import { useNavigate, useNavigation } from 'react-router-dom';
 
 import logo from '@/assets/logo.svg';
 import { Button } from '@/components/ui/button';
-import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 import { paths } from '@/config/paths';
-import { useAuthorization } from '@/lib/authorization';
 import { useLogout } from '@/stores/auth/hooks';
 import { cn } from '@/utils/cn';
 
@@ -18,20 +16,19 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown';
 import { Link } from '../ui/link';
-
-type SideNavigationItem = {
-  name: string;
-  to: string;
-  icon: (props: React.SVGProps<SVGSVGElement>) => JSX.Element;
-};
+import { SidebarProvider, SidebarTrigger } from '../ui/sidebar';
+import { AppSidebar, SideNavigationItem } from '../ui/sidebar/app-sidebar';
 
 const Logo = () => {
   return (
-    <Link className="flex items-center text-white" to={paths.home.getHref()}>
-      <img className="h-8 w-auto" src={logo} alt="Workflow" />
-      <span className="text-sm font-semibold text-white">
-        Bulletproof React
-      </span>
+    <Link className="flex items-center" to={paths.home.getHref()}>
+      <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+        <img className="size-10" src={logo} alt="Workflow" />
+      </div>
+      <div className="ml-3 flex flex-col gap-0.5 leading-none">
+        <span className="font-semibold">Dashboard</span>
+        <span className="">v1.0.0</span>
+      </div>
     </Link>
   );
 };
@@ -78,88 +75,34 @@ const Progress = () => {
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const logout = useLogout();
-  const { checkAccess } = useAuthorization();
+  // const { checkAccess } = useAuthorization();
   const navigate = useNavigate();
   const navigation = [
-    { name: 'Dashboard', to: paths.app.dashboard.getHref(), icon: Home },
+    { name: 'Dashboard', path: paths.app.dashboard.getHref(), icon: 'menu' },
+    {
+      name: 'Master',
+      icon: 'panel-left',
+      submenu: [
+        {
+          name: 'Access',
+          icon: 'user',
+          submenu: [
+            { name: 'Menu', path: '/app/master/access/menu', icon: 'menu' },
+            { name: 'Roles', path: '/app/master/access/roles', icon: 'menu' },
+          ],
+        },
+      ],
+    },
   ].filter(Boolean) as SideNavigationItem[];
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-muted/40">
-      <aside className="fixed inset-y-0 left-0 z-10 hidden w-60 flex-col border-r bg-black sm:flex">
-        <nav className="flex flex-col items-center gap-4 px-2 py-4">
-          <div className="flex h-16 shrink-0 items-center px-4">
-            <Logo />
-          </div>
-          {navigation.map((item) => (
-            <NavLink
-              key={item.name}
-              to={item.to}
-              end={item.name !== 'Discussions'}
-              className={({ isActive }) =>
-                cn(
-                  'text-gray-300 hover:bg-gray-700 hover:text-white',
-                  'group flex flex-1 w-full items-center rounded-md p-2 text-base font-medium',
-                  isActive && 'bg-gray-900 text-white',
-                )
-              }
-            >
-              <item.icon
-                className={cn(
-                  'text-gray-400 group-hover:text-gray-300',
-                  'mr-4 size-6 shrink-0',
-                )}
-                aria-hidden="true"
-              />
-              {item.name}
-            </NavLink>
-          ))}
-        </nav>
-      </aside>
-      <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-60">
-        <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:justify-end sm:border-0 sm:bg-transparent sm:px-6">
-          <Progress />
-          <Drawer>
-            <DrawerTrigger asChild>
-              <Button size="icon" variant="outline" className="sm:hidden">
-                <PanelLeft className="size-5" />
-                <span className="sr-only">Toggle Menu</span>
-              </Button>
-            </DrawerTrigger>
-            <DrawerContent
-              side="left"
-              className="bg-black pt-10 text-white sm:max-w-60"
-            >
-              <nav className="grid gap-6 text-lg font-medium">
-                <div className="flex h-16 shrink-0 items-center px-4">
-                  <Logo />
-                </div>
-                {navigation.map((item) => (
-                  <NavLink
-                    key={item.name}
-                    to={item.to}
-                    end
-                    className={({ isActive }) =>
-                      cn(
-                        'text-gray-300 hover:bg-gray-700 hover:text-white',
-                        'group flex flex-1 w-full items-center rounded-md p-2 text-base font-medium',
-                        isActive && 'bg-gray-900 text-white',
-                      )
-                    }
-                  >
-                    <item.icon
-                      className={cn(
-                        'text-gray-400 group-hover:text-gray-300',
-                        'mr-4 size-6 shrink-0',
-                      )}
-                      aria-hidden="true"
-                    />
-                    {item.name}
-                  </NavLink>
-                ))}
-              </nav>
-            </DrawerContent>
-          </Drawer>
+    <SidebarProvider>
+      <Progress />
+      <AppSidebar logo={<Logo />} items={navigation} />
+      <div className="flex min-h-screen w-full flex-col">
+        <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-60"></div>
+        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:justify-between sm:border-0 sm:bg-transparent sm:px-6">
+          <SidebarTrigger />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -188,10 +131,8 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
             </DropdownMenuContent>
           </DropdownMenu>
         </header>
-        <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
-          {children}
-        </main>
+        <main>{children}</main>
       </div>
-    </div>
+    </SidebarProvider>
   );
 }

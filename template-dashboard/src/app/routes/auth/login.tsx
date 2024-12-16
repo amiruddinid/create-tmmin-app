@@ -1,10 +1,10 @@
+import { nanoid } from 'nanoid';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { AuthLayout } from '@/components/layouts/auth-layout';
 import { paths } from '@/config/paths';
 import { LoginForm } from '@/features/auth/components/login-form';
 import { useAppAlert } from '@/stores/app-alert';
-import { nanoid } from 'nanoid';
 
 export const LoginRoute = () => {
   const navigate = useNavigate();

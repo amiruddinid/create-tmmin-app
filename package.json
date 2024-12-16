@@ -1,5 +1,5 @@
 {
-  "name": "@tmmin/create-tmmin-app",
+  "name": "create-tmmin-app",
   "version": "0.0.1",
   "type": "module",
   "license": "MIT",

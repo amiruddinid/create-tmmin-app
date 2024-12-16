@@ -17,7 +17,6 @@ const Entry = ({ label, value }: EntryProps) => (
 
 export const ProfileRoute = () => {
   const [user] = useUser();
-  console.log(user);
   if (!user.data) return null;
 
   return (

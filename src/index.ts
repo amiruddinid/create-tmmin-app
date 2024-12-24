@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import colors from "picocolors";
 import prompts from "prompts";
 
-const { blue, cyanBright, red, redBright, white, reset } = colors;
+const { green, cyanBright, red, redBright, white, reset, yellow } = colors;
 
 // Avoids autoconversion to number of the project name by defining that the args
 // non associated with an option ( _ ) needs to be parsed as a string. See #4606
@@ -30,10 +30,10 @@ Options:
   -t, --template NAME        use a specific template
 
 Available templates:
-${redBright ('backend')}
-${cyanBright ('dashboard')}
-${white      ('website')}
-${blue      ('expo')}`
+${redBright("backend")}
+${cyanBright("dashboard")}
+${white("website")}
+${green("expo")}`;
 
 type ColorFunc = (str: string | number) => string;
 type Type = {
@@ -61,7 +61,12 @@ const TYPES: Type[] = [
   {
     name: "expo",
     display: "Mobile RN + Expo",
-    color: blue,
+    color: green,
+  },
+  {
+    name: "rn",
+    display: "Mobile RN",
+    color: yellow,
   },
 ];
 
@@ -310,29 +315,6 @@ function pkgFromUserAgent(userAgent: string | undefined) {
     name: pkgSpecArr[0],
     version: pkgSpecArr[1],
   };
-}
-
-function setupReactSwc(root: string, isTs: boolean) {
-  editFile(path.resolve(root, "package.json"), (content) => {
-    return content.replace(
-      /"@tmmin-appjs\/plugin-react": ".+?"/,
-      `"@tmmin-appjs/plugin-react-swc": "^3.5.0"`
-    );
-  });
-  editFile(
-    path.resolve(root, `tmmin-app.config.${isTs ? "ts" : "js"}`),
-    (content) => {
-      return content.replace(
-        "@tmmin-appjs/plugin-react",
-        "@tmmin-appjs/plugin-react-swc"
-      );
-    }
-  );
-}
-
-function editFile(file: string, callback: (content: string) => string) {
-  const content = fs.readFileSync(file, "utf-8");
-  fs.writeFileSync(file, callback(content), "utf-8");
 }
 
 init().catch((e) => {

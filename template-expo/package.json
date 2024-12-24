@@ -131,7 +131,6 @@
     "type": "git",
     "url": "git+https://github.com/user/repo-name.git"
   },
-  "packageManager": "pnpm@9.12.3",
   "expo": {
     "doctor": {
       "reactNativeDirectoryCheck": {
